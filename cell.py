@@ -33,6 +33,10 @@ def get_cells(path : str) -> list[Cell]:
         stop("[" + path + "] is not a notebook file!")
     return [Cell(item) for item in data["cells"]]
 
+def get_cell_type_title(type):
+    title_color = Colors.CODE if type == "code" else Colors.MARKDOWN
+    return title_color + type + Colors.STD
+
 def show_cell(cell : Cell, format : EditorialAction):
     prefix = ". "
     if format == EditorialAction.INSERT:
@@ -49,10 +53,9 @@ def show_cells_delta(old : Cell, new : Cell):
     prescription, inserts, deletions = get_editorial_prescription(old.source, new.source)
     old_index = 0
     new_index = 0
-    title_color = (Colors.MARKDOWN if old.type == "markdown" else Colors.CODE)
     inserts_text = (" " + Colors.POSITIVE + "+" + str(inserts) + Colors.STD) if (inserts > 0) else ""
     deletions_text = (" " + Colors.NEGATIVE + "-" + str(deletions) + Colors.STD) if (deletions > 0) else ""
-    print("<" + title_color + old.type + Colors.STD + inserts_text + deletions_text + ">")
+    print("<" + get_cell_type_title(old.type) + inserts_text + deletions_text + ">")
     for action in prescription:
         if(action == EditorialAction.MATCH):
             print(". " + old.source[old_index], end="" if old.source[old_index][-1] == "\n" else "\n")

@@ -18,15 +18,15 @@ old_index = 0
 new_index = 0
 for action in prescription:
     if(action == EditorialAction.MATCH):
-        show_cells_delta(old_cells[old_index], new_cells[old_index])
+        show_cells_delta(old_cells[old_index], new_cells[new_index])
         old_index += 1
         new_index += 1
     if(action == 'D'):
-        print("<" + old_cells[old_index].type + " deleted>")
+        print("<" + get_cell_type_title(old_cells[old_index].type) + Colors.GOLD + " deleted" + Colors.STD + ">")
         show_cell(old_cells[old_index], EditorialAction.DELETE)
         old_index += 1
     if(action == 'I'):
-        print("<" + new_cells[old_index].type + " inserted>")
+        print("<" + get_cell_type_title(new_cells[new_index].type) + Colors.GOLD + " inserted" + Colors.STD + ">")
         show_cell(new_cells[new_index], EditorialAction.INSERT)
         new_index += 1
     print()
