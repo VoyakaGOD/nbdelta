@@ -11,6 +11,8 @@ class Cell:
         self.source = jsonObj["source"]
         if "outputs" in jsonObj:
             self.output = jsonObj["outputs"]
+        else:
+            self.output = []
 
     def __eq__(self, other) -> bool:
         if type(self) != type(other):
@@ -31,5 +33,22 @@ def get_cells(path : str) -> list[Cell]:
         stop("[" + path + "] is not a notebook file!")
     return [Cell(item) for item in data["cells"]]
 
-def show_cells_diff(old : Cell, new : Cell):
-    pass
+def show_cells_delta(old : Cell, new : Cell):
+    prescription, inserts, deletions = get_editorial_prescription(old.source, new.source)
+    old_index = 0
+    new_index = 0
+    title_color = (Colors.MARKDOWN if old.type == "markdown" else Colors.CODE)
+    inserts_text = (" " + Colors.POSITIVE + "+" + str(inserts) + Colors.STD) if (inserts > 0) else ""
+    deletions_text = (" " + Colors.NEGATIVE + "-" + str(deletions) + Colors.STD) if (deletions > 0) else ""
+    print("<" + title_color + old.type + Colors.STD + inserts_text + deletions_text + ">")
+    for action in prescription:
+        if(action == EditorialAction.MATCH):
+            print(". " + old.source[old_index], end="" if old.source[old_index][-1] == "\n" else "\n")
+            old_index += 1
+            new_index += 1
+        if(action == 'D'):
+            print(Colors.NEGATIVE + "- " + old.source[old_index] + Colors.STD, end="" if old.source[old_index][-1] == "\n" else "\n")
+            old_index += 1
+        if(action == 'I'):
+            print(Colors.POSITIVE + "+ " + new.source[new_index] + Colors.STD, end="" if new.source[new_index][-1] == "\n" else "\n")
+            new_index += 1

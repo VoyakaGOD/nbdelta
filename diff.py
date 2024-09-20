@@ -19,11 +19,13 @@ def get_editorial_matrix(old, new) -> list[list[int]]:
                 D[i][j] = min(D[i - 1][j], D[i][j - 1]) + 1
     return D
 
-def get_editorial_prescription(old, new) -> list[EditorialAction]:
+def get_editorial_prescription(old, new) -> tuple[list[EditorialAction], int, int]:
     D = get_editorial_matrix(old, new)
     i = len(old)
     j = len(new)
     result = []
+    inserts = 0
+    deletions = 0
     while (i > 0) or (j > 0):
         if (i > 0) and (j > 0) and (D[i - 1][j - 1] == D[i][j]) and (old[i - 1] == new[j - 1]):
             result = [EditorialAction.MATCH] + result
@@ -31,8 +33,10 @@ def get_editorial_prescription(old, new) -> list[EditorialAction]:
             j -= 1
         elif (i > 0) and (D[i - 1][j] + 1 == D[i][j]):
             result = [EditorialAction.DELETE] + result
+            deletions += 1
             i -= 1
         else:
             result = [EditorialAction.INSERT] + result
+            inserts += 1
             j -= 1
-    return result
+    return result, inserts, deletions
