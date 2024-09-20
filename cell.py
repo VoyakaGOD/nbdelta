@@ -75,27 +75,25 @@ def get_deletions_tag(count):
 
 def show_cell(cell : Cell, format : EditorialAction):
     prefix = ". "
+    color = Colors.STD
     if format == EditorialAction.INSERT:
         prefix = "+ "
-        print(Colors.POSITIVE, end="")
+        color = Colors.POSITIVE
     elif format == EditorialAction.DELETE:
         prefix = "- "
-        print(Colors.NEGATIVE, end="")
+        color = Colors.NEGATIVE
     for line in cell.source:
-        print(prefix + line, end=get_end(line))
-    print(Colors.STD, end="")
+        print(color + prefix + line + Colors.STD, end=get_end(line))
     if cell.output is None:
         return
     print("[" + Colors.OUTPUT + "output" + Colors.STD + "]:")
+    color = Colors.GRAY
     if format == EditorialAction.INSERT:
-        print(Colors.DARK_POSITIVE, end="")
+        color = Colors.DARK_POSITIVE
     elif format == EditorialAction.DELETE:
-        print(Colors.DARK_NEGATIVE, end="")
-    else:
-        print(Colors.GRAY, end="")
+        color = Colors.DARK_NEGATIVE
     for line in cell.output:
-        print(prefix + line, end=get_end(line))
-    print(Colors.STD, end="")
+        print(color + prefix + line + Colors.STD, end=get_end(line))
 
 def show_cells_delta(old : Cell, new : Cell):
     prescription, insertions, deletions = get_editorial_prescription(old.source, new.source)
