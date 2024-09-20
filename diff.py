@@ -24,7 +24,7 @@ def get_editorial_prescription(old, new) -> tuple[list[EditorialAction], int, in
     i = len(old)
     j = len(new)
     result = []
-    inserts = 0
+    insertions = 0
     deletions = 0
     while (i > 0) or (j > 0):
         if (i > 0) and (j > 0) and (D[i - 1][j - 1] == D[i][j]) and (old[i - 1] == new[j - 1]):
@@ -37,6 +37,6 @@ def get_editorial_prescription(old, new) -> tuple[list[EditorialAction], int, in
             i -= 1
         else:
             result = [EditorialAction.INSERT] + result
-            inserts += 1
+            insertions += 1
             j -= 1
-    return result, inserts, deletions
+    return result, insertions, deletions

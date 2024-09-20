@@ -7,5 +7,6 @@ class Colors:
     MARKDOWN = "\033[38;2;86;156;214m"
     CODE = "\033[38;2;53;114;165m"
     OUTPUT = "\033[38;2;96;96;128m"
+    GRAY = "\033[38;2;96;96;96m"
 
 EXPECTED_CELLS_SIMILARITY = 0.4

@@ -67,6 +67,12 @@ def get_cell_type_title(type):
 def get_end(line : str):
     return "" if line[-1] == "\n" else "\n"
 
+def get_insertions_tag(count):
+    return (" " + Colors.POSITIVE + "+" + str(count) + Colors.STD) if (count > 0) else ""
+
+def get_deletions_tag(count):
+    return (" " + Colors.NEGATIVE + "-" + str(count) + Colors.STD) if (count > 0) else ""
+
 def show_cell(cell : Cell, format : EditorialAction):
     prefix = ". "
     if format == EditorialAction.INSERT:
@@ -80,12 +86,10 @@ def show_cell(cell : Cell, format : EditorialAction):
     print(Colors.STD, end="")
 
 def show_cells_delta(old : Cell, new : Cell):
-    prescription, inserts, deletions = get_editorial_prescription(old.source, new.source)
+    prescription, insertions, deletions = get_editorial_prescription(old.source, new.source)
     old_index = 0
     new_index = 0
-    inserts_text = (" " + Colors.POSITIVE + "+" + str(inserts) + Colors.STD) if (inserts > 0) else ""
-    deletions_text = (" " + Colors.NEGATIVE + "-" + str(deletions) + Colors.STD) if (deletions > 0) else ""
-    print("<" + get_cell_type_title(old.type) + inserts_text + deletions_text + ">")
+    print("<" + get_cell_type_title(old.type) + get_insertions_tag(insertions) + get_deletions_tag(deletions) + ">")
     for action in prescription:
         if(action == EditorialAction.MATCH):
             print(". " + old.source[old_index], end=get_end(old.source[old_index]))
@@ -101,4 +105,4 @@ def show_cells_delta(old : Cell, new : Cell):
         return
     print("[" + Colors.OUTPUT + "output" + Colors.STD + "]:")
     for line in old.output:
-        print(". " + line)
+        print(Colors.GRAY + ". " + line + Colors.STD)

@@ -22,11 +22,13 @@ for action in prescription:
         old_index += 1
         new_index += 1
     if(action == 'D'):
-        print("<" + get_cell_type_title(old_cells[old_index].type) + Colors.GOLD + " deleted" + Colors.STD + ">")
+        print("<" + get_cell_type_title(old_cells[old_index].type)
+              + get_deletions_tag(len(old_cells[old_index].source)) + Colors.GOLD + " deleted" + Colors.STD + ">")
         show_cell(old_cells[old_index], EditorialAction.DELETE)
         old_index += 1
     if(action == 'I'):
-        print("<" + get_cell_type_title(new_cells[new_index].type) + Colors.GOLD + " inserted" + Colors.STD + ">")
+        print("<" + get_cell_type_title(new_cells[new_index].type)
+              + get_insertions_tag(len(new_cells[new_index].source)) + Colors.GOLD + " inserted" + Colors.STD + ">")
         show_cell(new_cells[new_index], EditorialAction.INSERT)
         new_index += 1
     print()
