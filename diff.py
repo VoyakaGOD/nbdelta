@@ -19,7 +19,8 @@ def get_editorial_matrix(old, new) -> list[list[int]]:
                 D[i][j] = min(D[i - 1][j], D[i][j - 1]) + 1
     return D
 
-def get_editorial_prescription(D, old, new) -> list[EditorialAction]:
+def get_editorial_prescription(old, new) -> list[EditorialAction]:
+    D = get_editorial_matrix(old, new)
     i = len(old)
     j = len(new)
     result = []
