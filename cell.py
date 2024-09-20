@@ -33,6 +33,18 @@ def get_cells(path : str) -> list[Cell]:
         stop("[" + path + "] is not a notebook file!")
     return [Cell(item) for item in data["cells"]]
 
+def show_cell(cell : Cell, format : EditorialAction):
+    prefix = ". "
+    if format == EditorialAction.INSERT:
+        prefix = "+ "
+        print(Colors.POSITIVE, end="")
+    elif format == EditorialAction.DELETE:
+        prefix = "- "
+        print(Colors.NEGATIVE, end="")
+    for line in cell.source:
+        print(prefix + line, end="" if line[-1] == "\n" else "\n")
+    print(Colors.STD, end="")
+
 def show_cells_delta(old : Cell, new : Cell):
     prescription, inserts, deletions = get_editorial_prescription(old.source, new.source)
     old_index = 0
