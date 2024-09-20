@@ -1,7 +1,9 @@
 class Colors:
     STD = "\033[0m"
     POSITIVE = "\033[38;2;35;165;35m"
+    DARK_POSITIVE = "\033[38;2;20;94;20m"
     NEGATIVE = "\033[38;2;165;35;35m"
+    DARK_NEGATIVE = "\033[38;2;94;20;20m"
     GOLD = "\033[38;2;187;165;61m"
     DARK_GOLD = "\033[38;2;140;123;45m"
     MARKDOWN = "\033[38;2;86;156;214m"

@@ -64,7 +64,7 @@ def get_cell_type_title(type):
         return Colors.MARKDOWN + type + Colors.STD
     return type
 
-def get_end(line : str):
+def get_end(line):
     return "" if line[-1] == "\n" else "\n"
 
 def get_insertions_tag(count):
@@ -82,6 +82,18 @@ def show_cell(cell : Cell, format : EditorialAction):
         prefix = "- "
         print(Colors.NEGATIVE, end="")
     for line in cell.source:
+        print(prefix + line, end=get_end(line))
+    print(Colors.STD, end="")
+    if cell.output is None:
+        return
+    print("[" + Colors.OUTPUT + "output" + Colors.STD + "]:")
+    if format == EditorialAction.INSERT:
+        print(Colors.DARK_POSITIVE, end="")
+    elif format == EditorialAction.DELETE:
+        print(Colors.DARK_NEGATIVE, end="")
+    else:
+        print(Colors.GRAY, end="")
+    for line in cell.output:
         print(prefix + line, end=get_end(line))
     print(Colors.STD, end="")
 

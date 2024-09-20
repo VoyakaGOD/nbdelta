@@ -7,8 +7,8 @@ if len(argv) < 3:
 old_path = argv[1]
 new_path = argv[2]
 
-print(Colors.DARK_GOLD + "old" + Colors.STD + "  " + old_path)
-print(Colors.GOLD + "new" + Colors.STD + "  " + new_path)
+print(Colors.DARK_GOLD + "old" + Colors.STD + " " + old_path)
+print(Colors.GOLD + "new" + Colors.STD + " " + new_path)
 
 old_cells = get_cells(old_path)
 new_cells = get_cells(new_path)
