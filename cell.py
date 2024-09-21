@@ -106,13 +106,43 @@ def display_lines_prescription(prescription : list[EditorialAction], old : list[
             print(I + "+ " + new[new_index] + Colors.STD, end=get_end(new[new_index]))
             new_index += 1
 
-def show_cells_delta(old : Cell, new : Cell):
+def show_cells_delta(old : Cell, new : Cell) -> tuple[int, int]:
     prescription, insertions, deletions = get_editorial_prescription(old.source, new.source)
     out_prescription, out_insertions, out_deletions = get_editorial_prescription(old.output, new.output)
     out_tag = "" if (out_insertions + out_deletions == 0) else Colors.GOLD + " out" + Colors.STD
     print("<" + get_cell_type_title(old.type) + get_insertions_tag(insertions) + get_deletions_tag(deletions) + out_tag + ">")
     display_lines_prescription(prescription, old.source, new.source, Colors.STD, Colors.POSITIVE, Colors.NEGATIVE)
     if (old.output == []) and (new.output == []):
-        return
+        return 0, 0
     print("[" + Colors.OUTPUT + "output" + Colors.STD + "]:")
     display_lines_prescription(out_prescription, old.output, new.output, Colors.GRAY, Colors.DARK_POSITIVE, Colors.DARK_NEGATIVE)
+    return insertions, deletions
+
+def show_notebooks_delta(old : list[Cell], new : list[Cell]) -> None:
+    prescription, inserts, deletions = get_editorial_prescription(old, new)
+    old_index = 0
+    new_index = 0
+    line_inserts = 0 
+    line_deletions = 0
+    for action in prescription:
+        if(action == EditorialAction.MATCH):
+            delta = show_cells_delta(old[old_index], new[new_index])
+            line_inserts += delta[0]
+            line_deletions += delta[1]
+            old_index += 1
+            new_index += 1
+        if(action == 'D'):
+            print("<" + get_cell_type_title(old[old_index].type)
+                + get_deletions_tag(len(old[old_index].source)) + Colors.DARK_GOLD + " deleted" + Colors.STD + ">")
+            show_cell(old[old_index], EditorialAction.DELETE)
+            line_deletions += len(old[old_index].source)
+            old_index += 1
+        if(action == 'I'):
+            print("<" + get_cell_type_title(new[new_index].type)
+                + get_insertions_tag(len(new[new_index].source)) + Colors.GOLD + " inserted" + Colors.STD + ">")
+            show_cell(new[new_index], EditorialAction.INSERT)
+            line_inserts += len(new[new_index].source)
+            new_index += 1
+        print()
+    print("Cells:" + get_insertions_tag(inserts) + get_deletions_tag(deletions))
+    print("Lines:" + get_insertions_tag(line_inserts) + get_deletions_tag(line_deletions))
