@@ -14,13 +14,9 @@ class Cell:
         self.type = jsonObj["cell_type"]
         self.source = jsonObj["source"]
         if "outputs" in jsonObj:
-            self.output = jsonObj["outputs"]
-            if self.output == []:
-                self.output = None
-            else:
-                self.set_output(self.output)
+            self.set_output(jsonObj["outputs"])
         else:
-            self.output = None
+            self.output = []
 
     def __eq__(self, other) -> bool:
         if type(self) != type(other):
@@ -84,7 +80,7 @@ def show_cell(cell : Cell, format : EditorialAction):
         color = Colors.NEGATIVE
     for line in cell.source:
         print(color + prefix + line + Colors.STD, end=get_end(line))
-    if cell.output is None:
+    if cell.output == []:
         return
     print("[" + Colors.OUTPUT + "output" + Colors.STD + "]:")
     color = Colors.GRAY
@@ -95,24 +91,28 @@ def show_cell(cell : Cell, format : EditorialAction):
     for line in cell.output:
         print(color + prefix + line + Colors.STD, end=get_end(line))
 
-def show_cells_delta(old : Cell, new : Cell):
-    prescription, insertions, deletions = get_editorial_prescription(old.source, new.source)
+def display_lines_prescription(prescription : list[EditorialAction], old : list[str], new : list[str], M, I, D):
     old_index = 0
     new_index = 0
-    print("<" + get_cell_type_title(old.type) + get_insertions_tag(insertions) + get_deletions_tag(deletions) + ">")
     for action in prescription:
         if(action == EditorialAction.MATCH):
-            print(". " + old.source[old_index], end=get_end(old.source[old_index]))
+            print(M + ". " + old[old_index] + Colors.STD, end=get_end(old[old_index]))
             old_index += 1
             new_index += 1
         if(action == 'D'):
-            print(Colors.NEGATIVE + "- " + old.source[old_index] + Colors.STD, end=get_end(old.source[old_index]))
+            print(D + "- " + old[old_index] + Colors.STD, end=get_end(old[old_index]))
             old_index += 1
         if(action == 'I'):
-            print(Colors.POSITIVE + "+ " + new.source[new_index] + Colors.STD, end=get_end(new.source[new_index]))
+            print(I + "+ " + new[new_index] + Colors.STD, end=get_end(new[new_index]))
             new_index += 1
-    if old.output is None:
+
+def show_cells_delta(old : Cell, new : Cell):
+    prescription, insertions, deletions = get_editorial_prescription(old.source, new.source)
+    out_prescription, out_insertions, out_deletions = get_editorial_prescription(old.output, new.output)
+    out_tag = "" if (out_insertions + out_deletions == 0) else Colors.GOLD + " out" + Colors.STD
+    print("<" + get_cell_type_title(old.type) + get_insertions_tag(insertions) + get_deletions_tag(deletions) + out_tag + ">")
+    display_lines_prescription(prescription, old.source, new.source, Colors.STD, Colors.POSITIVE, Colors.NEGATIVE)
+    if (old.output == []) and (new.output == []):
         return
     print("[" + Colors.OUTPUT + "output" + Colors.STD + "]:")
-    for line in old.output:
-        print(Colors.GRAY + ". " + line + Colors.STD)
+    display_lines_prescription(out_prescription, old.output, new.output, Colors.GRAY, Colors.DARK_POSITIVE, Colors.DARK_NEGATIVE)
