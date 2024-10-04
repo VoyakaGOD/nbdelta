@@ -118,6 +118,11 @@ def show_cells_delta(old : Cell, new : Cell) -> tuple[int, int]:
     display_lines_prescription(out_prescription, old.output, new.output, Colors.GRAY, Colors.DARK_POSITIVE, Colors.DARK_NEGATIVE)
     return insertions, deletions
 
+def get_diff_summary(inserts, deletions):
+    if inserts + deletions == 0:
+        return Colors.DARK_GOLD + " @" + Colors.STD
+    return get_insertions_tag(inserts) + get_deletions_tag(deletions)
+
 def show_notebooks_delta(old : list[Cell], new : list[Cell]) -> None:
     prescription, inserts, deletions = get_editorial_prescription(old, new)
     old_index = 0
@@ -144,5 +149,5 @@ def show_notebooks_delta(old : list[Cell], new : list[Cell]) -> None:
             line_inserts += len(new[new_index].source)
             new_index += 1
         print()
-    print("Cells:" + get_insertions_tag(inserts) + get_deletions_tag(deletions))
-    print("Lines:" + get_insertions_tag(line_inserts) + get_deletions_tag(line_deletions))
+    print("Cells:" + get_diff_summary(inserts, deletions))
+    print("Lines:" + get_diff_summary(line_inserts, line_deletions))
