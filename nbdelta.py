@@ -83,6 +83,13 @@ def cmd_diff() -> None:
 def cmd_git_diff() -> None:
     if not git.have_git():
         stop("You need git to use git-diff command! Use diff intstead...")
+    similarity = const.EXPECTED_CELLS_SIMILARITY
+    try:
+        similarity = float(git.get_config_value("diff.nbdelta.similarity"))
+    except:
+        pass
+    if (0 <= similarity) and (similarity <= 1):
+        const.EXPECTED_CELLS_SIMILARITY = similarity
     cmd_diff()
 
 commands = {

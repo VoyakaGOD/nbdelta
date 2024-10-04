@@ -1,7 +1,8 @@
 from stop import stop
-from constants import *
+from constants import Colors
 from diff import *
 import json
+import constants as const
 
 def get_short_string(obj):
     raw = str(obj)
@@ -24,7 +25,7 @@ class Cell:
         if self.type != other.type:
             return False
         distance = get_editorial_matrix(self.source, other.source)[len(self.source)][len(other.source)]
-        return distance <= EXPECTED_CELLS_SIMILARITY * (len(self.source) + len(other.source))
+        return distance <= (1 - const.EXPECTED_CELLS_SIMILARITY) * (len(self.source) + len(other.source))
     
     def set_output(self, output):
         self.output = []
@@ -82,7 +83,7 @@ def show_cell(cell : Cell, format : EditorialAction):
         print(color + prefix + line + Colors.STD, end=get_end(line))
     if cell.output == []:
         return
-    print("[" + Colors.OUTPUT + "output" + Colors.STD + "]:")
+    print("[" + Colors.OUTPUT + "output" + Colors.STD + "]")
     color = Colors.GRAY
     if format == EditorialAction.INSERT:
         color = Colors.DARK_POSITIVE
@@ -114,7 +115,7 @@ def show_cells_delta(old : Cell, new : Cell) -> tuple[int, int]:
     display_lines_prescription(prescription, old.source, new.source, Colors.STD, Colors.POSITIVE, Colors.NEGATIVE)
     if (old.output == []) and (new.output == []):
         return 0, 0
-    print("[" + Colors.OUTPUT + "output" + Colors.STD + "]:")
+    print("[" + Colors.OUTPUT + "output" + Colors.STD + "]")
     display_lines_prescription(out_prescription, old.output, new.output, Colors.GRAY, Colors.DARK_POSITIVE, Colors.DARK_NEGATIVE)
     return insertions, deletions
 
