@@ -3,7 +3,7 @@
 ![GPL-3.0 license](https://img.shields.io/badge/license-GPL--3.0-red)
 ![git diff](https://img.shields.io/badge/git-diff-white)
 ![Jupyter Notebook](https://img.shields.io/badge/Jupyter_Notebook-F37726)
-![repo size](https://img.shields.io/badge/repo_size-0_Mb-blue)
+![repo size](https://img.shields.io/badge/repo_size-127_kb-blue)
 
 **nbdelta** is a tool to compare two **.ipynb** files.
 
