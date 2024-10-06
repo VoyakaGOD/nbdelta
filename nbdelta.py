@@ -23,9 +23,13 @@ def cmd_help() -> None:
     help
         shows list of commands with args info
           
-    enable [interpreter=python] [config_level=local] [similarity]
+    config
+        shows configuration info, stored in git config
+          
+    enable [interpreter=python] [config_level=local] [similarity=0.4] [auxiliary=-1]
         adds configuration info to appropriate config file
         similarity - value from 0 to 1 of similarity required to consider cells equals
+        auxiliary - count of not changed lines around changed ones, negative values means show all
           
     disable [config_level=local]
         remove values added by previous command
@@ -43,6 +47,11 @@ def cmd_help() -> None:
         shows diff using settings from git config file
 """)
 
+def cmd_config():
+    print("command=(" + git.get_config_value("diff.nbdelta.command") + ")")
+    print("similarity=(" + git.get_config_value("diff.nbdelta.similarity") + ")")
+    print("auxiliary=(" + git.get_config_value("diff.nbdelta.auxiliary") + ")")
+
 def cmd_enable() -> None:
     level = get_config_level_for_cmd(3)
     interpreter = "python"
@@ -53,11 +62,19 @@ def cmd_enable() -> None:
     if len(argv) > 4:
         if not git.set_config_value("diff.nbdelta.similarity", argv[4], level):
             print("Something went wrong: can't change diff.nbdelta.similarity in git " + level + " config...")
+    if len(argv) > 5:
+        if not git.set_config_value("diff.nbdelta.auxiliary", argv[5], level):
+            print("Something went wrong: can't change diff.nbdelta.auxiliary in git " + level + " config...")
+
+def remove_diff_config_value(value : str, level : git.ConfigLevel) -> None:
+    if not git.reset_config_value(f"diff.nbdelta.{value}", level):
+        print(f"Something went wrong: can't remove diff.nbdelta.{value} from git {level} config...")
 
 def cmd_disable() -> None:
     level = get_config_level_for_cmd(2)
-    if not git.reset_config_value("diff.nbdelta.command", level):
-        print("Something went wrong: can't remove diff.nbdelta.command from git " + level + " config...")
+    remove_diff_config_value("command", level)
+    remove_diff_config_value("similarity", level)
+    remove_diff_config_value("auxiliary", level)
 
 def cmd_add_attribute() -> None:
     git.add_git_attribute("*.ipynb", "diff", "nbdelta")
@@ -90,10 +107,15 @@ def cmd_git_diff() -> None:
         pass
     if (0 <= similarity) and (similarity <= 1):
         const.EXPECTED_CELLS_SIMILARITY = similarity
+    try:
+        const.AUXILIARY_LINES_COUNT = int(git.get_config_value("diff.nbdelta.auxiliary"))
+    except:
+        pass
     cmd_diff()
 
 commands = {
     "help" : cmd_help,
+    "config" : cmd_config,
     "enable" : cmd_enable,
     "disable" : cmd_disable,
     "add-attribute" : cmd_add_attribute,
