@@ -35,7 +35,7 @@ def cmd_help() -> None:
         remove values added by previous command
           
     add-attribute
-        adds line '*.ipynb diff=nbdelta' to .gitattribute file(create if doesn't exist)
+        adds line '*.ipynb diff=nbdelta' to .gitattribute file(create if it doesn't exist)
           
     rm-attribute
         remove line '*.ipynb diff=nbdelta' from .gitattribute file
