@@ -1,9 +1,11 @@
+from typing import Sequence
+
 class EditorialAction:
     MATCH = 'M'
     INSERT = 'I'
     DELETE = 'D'
 
-def get_editorial_matrix(old, new) -> list[list[int]]:
+def get_editorial_matrix(old : Sequence, new : Sequence):
     M = len(old) + 1
     N = len(new) + 1
     D = [[0 for n in range(N)] for m in range(M)]
@@ -19,11 +21,11 @@ def get_editorial_matrix(old, new) -> list[list[int]]:
                 D[i][j] = min(D[i - 1][j], D[i][j - 1]) + 1
     return D
 
-def get_editorial_prescription(old, new) -> tuple[list[EditorialAction], int, int]:
+def get_editorial_prescription(old : Sequence, new : Sequence):
     D = get_editorial_matrix(old, new)
     i = len(old)
     j = len(new)
-    result = []
+    result : list[EditorialAction] = []
     insertions = 0
     deletions = 0
     while (i > 0) or (j > 0):

@@ -1,5 +1,5 @@
 #![path to the python interpreter]
-# It's a hook for calculating the size of a repository (.git + working directory) 
+# It's a hook for calculating approximate size of a repository (.git + working directory)
 # at the time of the last commit. The values are slightly smaller than the real ones 
 # since they are obtained before the new commit.
 # It's also saves size info into README.md file in line starts with "![repo size]"
